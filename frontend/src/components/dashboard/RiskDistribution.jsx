@@ -1,12 +1,7 @@
 import { motion } from "motion/react";
 import { kpiCards, riskDistribution } from "../../data/dashboard.js";
+import { BAND_COLORS } from "../machines/riskColors.js";
 import Card from "./Card.jsx";
-
-const BAND_COLORS = {
-  Low: "var(--color-status-success)",
-  Medium: "var(--color-status-warning)",
-  High: "var(--color-status-danger)",
-};
 
 const BAND_LABELS = {
   Low: "< 30%",

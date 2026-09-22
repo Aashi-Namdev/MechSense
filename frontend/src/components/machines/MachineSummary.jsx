@@ -1,11 +1,6 @@
 import { motion } from "motion/react";
 import { FiDatabase } from "react-icons/fi";
-
-const BAND_COLORS = {
-  Low: "var(--color-status-success)",
-  Medium: "var(--color-status-warning)",
-  High: "var(--color-status-danger)",
-};
+import { BAND_COLORS } from "./riskColors.js";
 
 function MachineSummary({ machines }) {
   const total = machines.length;

@@ -6,29 +6,8 @@ import {
   FiChevronUp,
   FiSearch,
 } from "react-icons/fi";
-
-const BAND_COLORS = {
-  Low: "var(--color-status-success)",
-  Medium: "var(--color-status-warning)",
-  High: "var(--color-status-danger)",
-};
-
-function RiskBadge({ band }) {
-  const color = BAND_COLORS[band] ?? "var(--color-text-muted)";
-
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 text-xs font-medium"
-      style={{ color }}
-    >
-      <span
-        className="h-2 w-2 shrink-0 rounded-full"
-        style={{ backgroundColor: color }}
-      />
-      {band}
-    </span>
-  );
-}
+import RiskBadge from "./RiskBadge.jsx";
+import { BAND_COLORS } from "./riskColors.js";
 
 function ProbabilityCell({ machine }) {
   const percent = (machine.probability * 100).toFixed(2);
