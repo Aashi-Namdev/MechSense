@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { motion } from "motion/react";
-import { FiGrid, FiCpu, FiActivity } from "react-icons/fi";
+import { FiGrid, FiCpu, FiActivity, FiBarChart2 } from "react-icons/fi";
 
 import logo from "../assets/MechSenseLogo.png";
 import { kpiCards } from "../data/dashboard.js";
@@ -9,6 +9,7 @@ const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: FiGrid },
   { label: "Machines", to: "/machines", icon: FiCpu },
   { label: "Predict", to: "/predict", icon: FiActivity },
+  { label: "Model Performance", to: "/model-performance", icon: FiBarChart2 },
 ];
 
 function Sidebar() {

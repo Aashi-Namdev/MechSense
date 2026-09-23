@@ -9,6 +9,7 @@ import {
   FiZap,
 } from "react-icons/fi";
 import { mockPredict } from "../data/predict.js";
+import { recommendationFor } from "../data/constants.js";
 import Card from "../components/dashboard/Card.jsx";
 import RiskBadge from "../components/machines/RiskBadge.jsx";
 import { BAND_COLORS } from "../components/machines/riskColors.js";
@@ -222,7 +223,7 @@ function Predict() {
                 <p className="text-sm font-medium text-text-secondary">
                   No prediction yet
                 </p>
-                <p className="max-w-[240px] text-xs text-text-muted">
+                <p className="max-w-60 text-xs text-text-muted">
                   Fill in the sensor inputs and press Predict Failure Risk.
                 </p>
               </div>
@@ -282,6 +283,11 @@ function Predict() {
                     </span>
                   </div>
                 </div>
+
+                <p className="mt-4 flex items-center gap-2 text-sm text-text-secondary">
+                  <FiAlertTriangle className="shrink-0 text-primary" />
+                  Recommendation: {recommendationFor(result.riskBand)}
+                </p>
               </motion.div>
             )}
           </Card>

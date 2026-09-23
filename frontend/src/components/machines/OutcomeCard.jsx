@@ -1,5 +1,6 @@
 import Card from "../dashboard/Card.jsx";
 import { FiAlertTriangle, FiCheckCircle } from "react-icons/fi";
+import { recommendationFor } from "../../data/constants.js";
 
 const RESULT_STYLES = {
   Correct: { color: "var(--color-status-success)" },
@@ -61,6 +62,11 @@ function OutcomeCard({ machine }) {
           </span>
         </div>
       </div>
+
+      <p className="mt-4 flex items-center gap-2 text-sm text-text-secondary">
+        <FiAlertTriangle className="shrink-0 text-primary" />
+        Recommendation: {recommendationFor(machine.riskBand)}
+      </p>
 
       <p className="mt-4 text-xs leading-relaxed text-text-muted">
         &quot;Actual&quot; is the historical dataset label for this record. It

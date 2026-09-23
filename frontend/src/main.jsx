@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Machines from "./pages/Machines.jsx";
 import MachinesDetail from "./pages/MachinesDetail.jsx";
 import Predict from "./pages/Predict.jsx";
+import ModelPerformance from "./pages/ModelPerformance.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="machines" element={<Machines />} />
       <Route path="machines/:id" element={<MachinesDetail />} />
       <Route path="predict" element={<Predict />} />
+      <Route path="model-performance" element={<ModelPerformance />} />
     </Route>,
   ),
 );

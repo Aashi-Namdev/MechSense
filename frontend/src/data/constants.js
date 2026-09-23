@@ -8,3 +8,9 @@ export function riskBandFor(probability) {
   if (probability >= RISK_BAND_EDGES.low) return "Medium";
   return "Low";
 }
+
+export function recommendationFor(riskBand) {
+  if (riskBand === "High") return "Schedule immediate inspection";
+  if (riskBand === "Medium") return "Monitor closely, schedule routine check";
+  return "No action needed";
+}
