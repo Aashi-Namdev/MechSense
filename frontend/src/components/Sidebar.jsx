@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion } from "motion/react";
-import { FiGrid, FiCpu, FiActivity, FiBarChart2 } from "react-icons/fi";
+import { FiGrid, FiCpu, FiActivity, FiBarChart2, FiHome } from "react-icons/fi";
 
 import logo from "../assets/MechSenseLogo.png";
 import { kpiCards } from "../data/dashboard.js";
@@ -70,7 +70,14 @@ function Sidebar() {
       </nav>
 
       {/* System status */}
-      <footer className="border-t border-border-subtle p-2 lg:p-4">
+      <footer className="space-y-1 border-t border-border-subtle p-2 lg:space-y-2 lg:p-4">
+        <Link
+          to="/"
+          className="group relative flex items-center justify-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-bg-card hover:text-text-secondary lg:justify-start lg:px-3"
+        >
+          <FiHome className="shrink-0 text-[18px] text-text-muted transition-colors group-hover:text-text-secondary" />
+          <span className="hidden lg:block">Go Back</span>
+        </Link>
         <div className="flex items-center justify-center gap-3 rounded-md bg-bg-card px-3 py-2.5 lg:justify-start">
           <span className="h-2 w-2 shrink-0 rounded-full bg-status-success" />
           <div className="hidden min-w-0 lg:block">
