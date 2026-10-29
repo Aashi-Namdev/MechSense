@@ -23,7 +23,7 @@ function KeyResults() {
       <SectionHeading
         eyebrow="Performance"
         title="Key Results"
-        subtitle="Final model — XGBoost, evaluated on the untouched test set."
+        subtitle="Final model — XGBoost, evaluated on the untouched test set. Stage 1 is the failure probability; Stage 2 is the likely cause of failure."
       />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -67,7 +67,7 @@ function KeyResults() {
       >
         <Link
           to="/model-performance"
-          onClick={window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-text-main"
         >
           See full model comparison

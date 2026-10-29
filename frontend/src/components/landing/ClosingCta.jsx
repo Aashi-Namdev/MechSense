@@ -22,19 +22,19 @@ function ClosingCta() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <PrimaryButton
             to="/dashboard"
-            onclick={window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             Dashboard
           </PrimaryButton>
           <SecondaryButton
             to="/machines"
-            onclick={window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             Machines
           </SecondaryButton>
           <SecondaryButton
             to="/predict"
-            onclick={window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             Try Prediction
           </SecondaryButton>

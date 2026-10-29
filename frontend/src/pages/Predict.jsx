@@ -9,9 +9,10 @@ import {
   FiZap,
 } from "react-icons/fi";
 import { mockPredict } from "../data/predict.js";
-import { recommendationFor } from "../data/constants.js";
 import Card from "../components/dashboard/Card.jsx";
 import RiskBadge from "../components/machines/RiskBadge.jsx";
+import LikelyCauseCard from "../components/machines/LikelyCauseCard.jsx";
+import RecommendedActionCard from "../components/machines/RecommendedActionCard.jsx";
 import { BAND_COLORS } from "../components/machines/riskColors.js";
 
 const defaultValues = {
@@ -108,7 +109,8 @@ function Predict() {
           Predict Failure Risk
         </h1>
         <p className="mt-1 text-sm text-text-muted">
-          Enter machine sensor readings to estimate failure probability.
+          Enter machine sensor readings to get a failure probability, a risk
+          band, and a recommended action.
         </p>
       </motion.header>
 
@@ -263,16 +265,18 @@ function Predict() {
                     <RiskBadge band={result.riskBand} />
                   </div>
                   <div className="flex items-center justify-between py-3">
-                    <span className="text-xs text-text-muted">Prediction</span>
+                    <span className="text-xs text-text-muted">
+                      Predicted Failure
+                    </span>
                     {result.predictedFailure === 1 ? (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-status-warning">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-status-warning">
                         <FiAlertTriangle className="shrink-0" />
-                        Failure predicted
+                        Yes
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-text-secondary">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary">
                         <FiCheckCircle className="shrink-0 text-status-success" />
-                        Normal
+                        No
                       </span>
                     )}
                   </div>
@@ -284,10 +288,11 @@ function Predict() {
                   </div>
                 </div>
 
-                <p className="mt-4 flex items-center gap-2 text-sm text-text-secondary">
-                  <FiAlertTriangle className="shrink-0 text-primary" />
-                  Recommendation: {recommendationFor(result.riskBand)}
-                </p>
+                {/* Stage 2: likely cause and mapped recommendation */}
+                <div className="mt-4 space-y-3">
+                  <LikelyCauseCard machine={result} delay={0.12} />
+                  <RecommendedActionCard machine={result} delay={0.2} />
+                </div>
               </motion.div>
             )}
           </Card>

@@ -83,9 +83,11 @@ function AboutTheMachines() {
         <FiInfo className="mt-0.5 shrink-0 text-primary" />
         <p className="text-xs leading-relaxed text-text-secondary">
           <span className="font-medium text-text-main">Current model scope:</span>{" "}
-          trained and evaluated on the AI4I 2020 dataset. A real deployment
-          would require validation on data from the target machines and
-          production environment.
+          trained and evaluated on the AI4I 2020 dataset. The quantitative
+          maintenance targets use deterministic rules derived from the
+          project&apos;s simulated dataset; they are not ML predictions. A real
+          deployment would require validation on data from the target machines
+          and production environment before practical use.
         </p>
       </motion.div>
     </section>

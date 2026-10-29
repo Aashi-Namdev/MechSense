@@ -107,6 +107,33 @@ function MatrixCell({ value, label, tone }) {
   );
 }
 
+function PipelineStage({ label, title, description, isLast }) {
+  return (
+    <div className="relative">
+      <div className="rounded-xl border border-border-subtle bg-bg-card-elevated px-4 py-3.5">
+        <p className="text-[10px] font-medium uppercase tracking-widest text-primary">
+          {label}
+        </p>
+        <p className="mt-1 text-sm font-medium text-text-main">{title}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-text-muted">
+          {description}
+        </p>
+      </div>
+
+      {!isLast && (
+        <div
+          aria-hidden="true"
+          className="mx-auto flex h-6 w-px items-center justify-center bg-border-subtle"
+        >
+          <span className="text-[10px] leading-none text-text-muted">
+            &darr;
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ModelPerformance() {
   const testTotal =
     finalConfusionMatrix.support.normal + finalConfusionMatrix.support.failure;
@@ -124,7 +151,8 @@ function ModelPerformance() {
           Model Performance
         </h1>
         <p className="mt-1 text-sm text-text-muted">
-          Evaluation of the predictive maintenance model on the test dataset.
+          Evaluation of the Stage-1 predictive maintenance model on the test
+          dataset.
         </p>
       </motion.header>
 
@@ -136,6 +164,39 @@ function ModelPerformance() {
           {finalModel.rocAuc}% ROC-AUC.
         </p>
       </div>
+
+      {/* Prediction pipeline */}
+      <Card title="Prediction Pipeline" delay={0.05}>
+        <p className="mb-4 text-xs leading-relaxed text-text-muted">
+          The application runs a two-stage pipeline. The metrics on this page
+          describe Stage 1.
+        </p>
+
+        <div className="max-w-2xl space-y-1">
+          <PipelineStage
+            label="Stage 1"
+            title="Failure Risk"
+            description="XGBoost estimates the probability of machine failure."
+          />
+          <PipelineStage
+            label="Stage 2"
+            title="Failure Mode"
+            description="If the Stage-1 threshold is crossed, the system estimates the likely failure mode(s)."
+          />
+          <PipelineStage
+            isLast
+            label="Application logic"
+            title="Recommendation"
+            description="A rule-based layer calculates quantitative maintenance targets from the simulated dataset rules."
+          />
+        </div>
+
+        <p className="mt-4 text-xs leading-relaxed text-text-muted">
+          Stage 1 metrics describe the XGBoost model only. Stage 2 and the
+          maintenance targets are rule-based application logic, not a trained
+          model, so no accuracy metrics are reported for them.
+        </p>
+      </Card>
 
       {/* Final model metrics */}
       <Card title="Final Model Metrics">
@@ -432,7 +493,9 @@ function ModelPerformance() {
       <Card title="Threshold Selection">
         <p className="mb-4 text-xs leading-relaxed text-text-muted">
           Threshold {finalModel.threshold.toFixed(2)} was selected to maintain
-          high failure recall while accepting additional false alarms.
+          high failure recall while accepting additional false alarms. At this
+          threshold, predictions classified as failure are passed to the second
+          stage for likely failure-mode analysis.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full min-w-120 text-sm">

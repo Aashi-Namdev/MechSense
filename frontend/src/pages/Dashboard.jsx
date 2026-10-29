@@ -15,6 +15,7 @@ import {
 } from "../data/dashboard.js";
 import KpiCard from "../components/dashboard/KpiCard.jsx";
 import TargetDistribution from "../components/dashboard/TargetDistribution.jsx";
+import FailureModeDistribution from "../components/dashboard/FailureModeDistribution.jsx";
 import FailureRateChart from "../components/dashboard/FailureRateChart.jsx";
 import RiskDistribution from "../components/dashboard/RiskDistribution.jsx";
 import TorqueRpmScatter from "../components/dashboard/TorqueRpmScatter.jsx";
@@ -72,8 +73,11 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* Target distribution */}
-      <TargetDistribution />
+      {/* Dataset distributions: failure rate and failure-mode composition */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <TargetDistribution />
+        <FailureModeDistribution />
+      </div>
 
       {/* Failure analysis */}
       <motion.section

@@ -58,7 +58,8 @@ function Hero() {
           className="mt-4 max-w-lg text-sm leading-relaxed text-text-secondary sm:text-base"
         >
           MechSense uses machine-learning-based failure prediction to identify
-          high-risk machine conditions from sensor readings.
+          high-risk machine conditions from sensor readings, then estimates the
+          likely failure cause and a recommended action.
         </motion.p>
 
         {/* Actions */}
@@ -70,14 +71,14 @@ function Hero() {
         >
           <PrimaryButton
             to="/dashboard"
-            onClick={window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             Explore Dashboard
             <FiArrowRight />
           </PrimaryButton>
           <SecondaryButton
             to="/predict"
-            onClick={window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <FiZap />
             Try Prediction

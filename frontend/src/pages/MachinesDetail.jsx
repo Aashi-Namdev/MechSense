@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { MOCK_MACHINES } from "../data/machines.js";
 import PredictionCard from "../components/machines/PredictionCard.jsx";
+import LikelyCauseCard from "../components/machines/LikelyCauseCard.jsx";
+import RecommendedActionCard from "../components/machines/RecommendedActionCard.jsx";
 import OutcomeCard from "../components/machines/OutcomeCard.jsx";
 import SensorReadings from "../components/machines/SensorReadings.jsx";
 import SensorComparison from "../components/machines/SensorComparison.jsx";
@@ -60,11 +62,15 @@ function MachinesDetail() {
         </div>
       </motion.header>
 
-      {/* Prediction and Outcome */}
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* Prediction, likely cause, and recommended action */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <PredictionCard machine={machine} />
-        <OutcomeCard machine={machine} />
+        <LikelyCauseCard machine={machine} />
+        <RecommendedActionCard machine={machine} />
       </div>
+
+      {/* Ground truth */}
+      <OutcomeCard machine={machine} />
 
       {/* Sensor readings */}
       <SensorReadings machine={machine} />

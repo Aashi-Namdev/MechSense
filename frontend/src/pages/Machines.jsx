@@ -45,7 +45,8 @@ function Machines() {
       >
         <h1 className="text-xl font-semibold text-text-main">Machines</h1>
         <p className="mt-1 text-sm text-text-muted">
-          Review machine records, prediction risk, and failure status.
+          Review machine records, prediction risk, and failure status. Open a
+          record to see its likely failure cause and recommended action.
         </p>
       </motion.header>
 

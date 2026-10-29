@@ -174,3 +174,16 @@ export const torqueVsRpmScatter = {
     { torque: 63.9, rpm: 1420 },
   ],
 };
+
+// Failure mode distribution
+export const failureModeDistribution = [
+  {
+    mode: "HDF",
+    label: "Heat dissipation",
+    count: 115,
+    percentOfFailures: 33.92,
+  },
+  { mode: "OSF", label: "Overstrain", count: 98, percentOfFailures: 28.91 },
+  { mode: "PWF", label: "Power", count: 95, percentOfFailures: 28.02 },
+  { mode: "TWF", label: "Tool wear", count: 46, percentOfFailures: 13.57 },
+];

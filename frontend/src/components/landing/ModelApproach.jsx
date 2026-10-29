@@ -17,9 +17,7 @@ function ModelApproach() {
       <SectionHeading
         eyebrow="Modeling"
         title="Model Approach"
-        subtitle="Four models were trained and compared — Logistic Regression, Decision
-        Tree, Random Forest, and XGBoost. XGBoost was selected as the final
-        model."
+        subtitle="Four models were trained and compared — Logistic Regression, Decision Tree, Random Forest, and XGBoost. XGBoost was selected as the final model."
       />
 
       {/* Horizontal pipeline on desktop, stacked on mobile */}
@@ -46,16 +44,36 @@ function ModelApproach() {
         ))}
       </div>
 
-      <motion.p
+      <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-6 max-w-3xl text-sm leading-relaxed text-text-muted"
+        className="mt-6 space-y-3 max-w-3xl text-sm leading-relaxed text-text-muted"
       >
-        The classification threshold was tuned to 0.40 to maintain high failure
-        recall while accepting additional false alarms.
-      </motion.p>
+        <p>
+          <strong className="text-text-main">Stage 1:</strong> XGBoost failure
+          prediction.
+        </p>
+        <p>
+          <strong className="text-text-main">Stage 2:</strong> Failure-mode
+          identification (estimates the likely failure mode(s) when Stage 1
+          predicts failure).
+        </p>
+        <p>
+          <strong className="text-text-main">Maintenance logic:</strong> The
+          predicted mode is passed to a rule-based layer that calculates a
+          quantitative target from the project&apos;s simulated dataset rules.
+          These targets are deterministic application logic, not ML
+          predictions.
+        </p>
+        <p>
+          The classification threshold was tuned to 0.40 to maintain high failure
+          recall while accepting additional false alarms. At this threshold,
+          predictions classified as failure are passed to the second stage for
+          likely failure-mode analysis.
+        </p>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -66,7 +84,7 @@ function ModelApproach() {
       >
         <Link
           to="/model-performance"
-          onClick={window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-text-main"
         >
           View Model Performance

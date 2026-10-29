@@ -18,6 +18,8 @@ const RAW_MACHINES = [
     tempDiff: 11.4,
     actualFailure: 0,
     probability: 0.077,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "H38289",
@@ -30,6 +32,8 @@ const RAW_MACHINES = [
     tempDiff: 11.2,
     actualFailure: 0,
     probability: 0.322,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L49905",
@@ -42,6 +46,8 @@ const RAW_MACHINES = [
     tempDiff: 9.6,
     actualFailure: 0,
     probability: 0.2441,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L51212",
@@ -54,6 +60,11 @@ const RAW_MACHINES = [
     tempDiff: 8.8,
     actualFailure: 1,
     probability: 0.6954,
+    actualFailureModes: ["OSF"],
+    likelyCauses: [
+      { mode: "OSF", probability: 0.91 },
+      { mode: "TWF", probability: 0.78 },
+    ],
   },
   {
     productId: "L48083",
@@ -66,6 +77,8 @@ const RAW_MACHINES = [
     tempDiff: 10.5,
     actualFailure: 1,
     probability: 0.1339,
+    actualFailureModes: ["PWF"],
+    likelyCauses: [{ mode: "PWF", probability: 0.85 }],
   },
   {
     productId: "L51365",
@@ -78,6 +91,8 @@ const RAW_MACHINES = [
     tempDiff: 8.4,
     actualFailure: 1,
     probability: 0.3919,
+    actualFailureModes: ["HDF"],
+    likelyCauses: [],
   },
   {
     productId: "L51863",
@@ -90,6 +105,8 @@ const RAW_MACHINES = [
     tempDiff: 8.2,
     actualFailure: 0,
     probability: 0.2995,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L53339",
@@ -102,6 +119,8 @@ const RAW_MACHINES = [
     tempDiff: 10.0,
     actualFailure: 1,
     probability: 0.4286,
+    actualFailureModes: ["OSF"],
+    likelyCauses: [{ mode: "OSF", probability: 0.91 }],
   },
   {
     productId: "L51337",
@@ -114,6 +133,8 @@ const RAW_MACHINES = [
     tempDiff: 8.5,
     actualFailure: 1,
     probability: 0.6494,
+    actualFailureModes: ["HDF"],
+    likelyCauses: [{ mode: "HDF", probability: 0.88 }],
   },
   {
     productId: "L51070",
@@ -126,6 +147,8 @@ const RAW_MACHINES = [
     tempDiff: 8.9,
     actualFailure: 0,
     probability: 0.4981,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "M15516",
@@ -138,6 +161,8 @@ const RAW_MACHINES = [
     tempDiff: 11.4,
     actualFailure: 0,
     probability: 0.2119,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L54188",
@@ -150,6 +175,8 @@ const RAW_MACHINES = [
     tempDiff: 10.1,
     actualFailure: 0,
     probability: 0.3437,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L51882",
@@ -162,6 +189,8 @@ const RAW_MACHINES = [
     tempDiff: 8.2,
     actualFailure: 1,
     probability: 0.8183,
+    actualFailureModes: ["TWF"],
+    likelyCauses: [{ mode: "TWF", probability: 0.92 }],
   },
   {
     productId: "L53476",
@@ -174,6 +203,8 @@ const RAW_MACHINES = [
     tempDiff: 9.5,
     actualFailure: 0,
     probability: 0.1934,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "M17286",
@@ -186,6 +217,8 @@ const RAW_MACHINES = [
     tempDiff: 9.3,
     actualFailure: 1,
     probability: 0.5222,
+    actualFailureModes: ["PWF"],
+    likelyCauses: [{ mode: "PWF", probability: 0.87 }],
   },
   {
     productId: "H29949",
@@ -198,6 +231,8 @@ const RAW_MACHINES = [
     tempDiff: 11.9,
     actualFailure: 0,
     probability: 0.39,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L56847",
@@ -210,6 +245,8 @@ const RAW_MACHINES = [
     tempDiff: 11.1,
     actualFailure: 1,
     probability: 0.7783,
+    actualFailureModes: ["OSF"],
+    likelyCauses: [{ mode: "OSF", probability: 0.91 }],
   },
   {
     productId: "M15740",
@@ -222,6 +259,8 @@ const RAW_MACHINES = [
     tempDiff: 10.5,
     actualFailure: 1,
     probability: 0.7072,
+    actualFailureModes: ["HDF"],
+    likelyCauses: [{ mode: "HDF", probability: 0.88 }],
   },
   {
     productId: "L50217",
@@ -234,6 +273,8 @@ const RAW_MACHINES = [
     tempDiff: 9.2,
     actualFailure: 0,
     probability: 0.1272,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "M15728",
@@ -246,6 +287,8 @@ const RAW_MACHINES = [
     tempDiff: 10.7,
     actualFailure: 0,
     probability: 0.3055,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "M19857",
@@ -258,6 +301,8 @@ const RAW_MACHINES = [
     tempDiff: 9.2,
     actualFailure: 1,
     probability: 0.272,
+    actualFailureModes: ["PWF"],
+    likelyCauses: [{ mode: "PWF", probability: 0.85 }],
   },
   {
     productId: "L52670",
@@ -270,6 +315,8 @@ const RAW_MACHINES = [
     tempDiff: 9.5,
     actualFailure: 1,
     probability: 0.6619,
+    actualFailureModes: ["TWF"],
+    likelyCauses: [{ mode: "TWF", probability: 0.92 }],
   },
   {
     productId: "L47622",
@@ -282,6 +329,8 @@ const RAW_MACHINES = [
     tempDiff: 11.1,
     actualFailure: 1,
     probability: 0.4655,
+    actualFailureModes: ["HDF"],
+    likelyCauses: [{ mode: "HDF", probability: 0.88 }],
   },
   {
     productId: "M16081",
@@ -294,6 +343,8 @@ const RAW_MACHINES = [
     tempDiff: 11.3,
     actualFailure: 0,
     probability: 0.3496,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L51724",
@@ -306,6 +357,8 @@ const RAW_MACHINES = [
     tempDiff: 7.9,
     actualFailure: 1,
     probability: 0.5613,
+    actualFailureModes: ["OSF"],
+    likelyCauses: [{ mode: "OSF", probability: 0.91 }],
   },
   {
     productId: "M17745",
@@ -318,6 +371,8 @@ const RAW_MACHINES = [
     tempDiff: 9.0,
     actualFailure: 0,
     probability: 0.3685,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
   {
     productId: "L48676",
@@ -330,6 +385,8 @@ const RAW_MACHINES = [
     tempDiff: 10.7,
     actualFailure: 1,
     probability: 0.6824,
+    actualFailureModes: ["TWF"],
+    likelyCauses: [{ mode: "TWF", probability: 0.92 }],
   },
   {
     productId: "L48438",
@@ -342,11 +399,15 @@ const RAW_MACHINES = [
     tempDiff: 11.4,
     actualFailure: 0,
     probability: 0.3427,
+    actualFailureModes: [],
+    likelyCauses: [],
   },
 ];
 
 // This is the array your Machines detail page should actually
 // read from, so the outcome/riskBand logic lives in one place.
+// actualFailureModes is dataset ground truth, likelyCauses is the
+// mock Stage-2 output and is only exposed when Stage 1 predicts failure.
 export const MOCK_MACHINES = RAW_MACHINES.map((m, index) => {
   const predictedFailure = m.probability >= CLASSIFICATION_THRESHOLD ? 1 : 0;
   return {
@@ -362,6 +423,8 @@ export const MOCK_MACHINES = RAW_MACHINES.map((m, index) => {
       temperatureDifference: m.tempDiff,
     },
     actualFailure: m.actualFailure,
+    actualFailureModes: m.actualFailureModes,
+    likelyCauses: predictedFailure == 1 ? m.likelyCauses : [],
     probability: m.probability,
     predictedFailure,
     riskBand: riskBandFor(m.probability),
