@@ -303,6 +303,7 @@ function pwfRecommendation(readings) {
   };
 }
 
+// function to get the recommendation for heat dissipation failure mode
 function hdfRecommendation(readings) {
   const { airTemp, processTemp, rpm } = readings;
 
@@ -317,6 +318,7 @@ function hdfRecommendation(readings) {
   const temperatureCondition = temperatureDifference < HDF_TEMP_DIFF_MIN;
   const rpmCondition = rpm < HDF_RPM_MIN;
 
+  // check if both conditions are met for the combined HDF rule
   const currentValues = [
     row(
       "Current temperature difference",
@@ -378,6 +380,7 @@ function hdfRecommendation(readings) {
   };
 }
 
+// function to get the recommendation for tool wear failure mode
 function twfRecommendation(readings) {
   const { toolWear } = readings;
 
@@ -428,6 +431,7 @@ function twfRecommendation(readings) {
   };
 }
 
+// Random failure recommendation is a general diagnostic inspection.
 function rnfRecommendation() {
   return {
     mode: "RNF",

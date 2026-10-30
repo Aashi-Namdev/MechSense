@@ -8,7 +8,7 @@ import heroImage from "../../assets/hero.png";
 function Hero() {
   return (
     <section
-      className="relative flex min-h-screen flex-col items-center overflow-hidden px-4 pb-20 pt-24 text-center sm:px-6 sm:pb-28 sm:pt-28 lg:px-8"
+      className="hero-dark relative flex min-h-screen flex-col items-center overflow-hidden px-4 pb-20 pt-24 text-center sm:px-6 sm:pb-28 sm:pt-28 lg:px-8"
       style={{
         backgroundImage: `url(${heroImage})`,
         backgroundSize: "cover",

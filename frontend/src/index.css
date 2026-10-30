@@ -8,9 +8,12 @@
   --color-bg-card: #101b23;
   --color-bg-card-elevated: #14232d;
   --color-border-subtle: #233640;
+  --color-chart-cursor: rgba(255, 255, 255, 0.04);
 
   --color-primary: #00b8d9;
   --color-secondary: #3b82f6;
+
+  --color-on-primary: #080f14;
 
   --color-text-main: #e6eef2;
   --color-text-secondary: #a8b7c1;
@@ -23,6 +26,44 @@
 
 :root {
   color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+
+  --color-bg-base: #eaf0f5;
+  --color-bg-panel: #dfe8ef;
+
+  --color-bg-card: #f8fafc;
+  --color-bg-card-elevated: #ffffff;
+  --color-border-subtle: #cbd8e2;
+  --color-chart-cursor: rgba(23, 43, 58, 0.06);
+
+  --color-primary: #009fbd;
+  --color-secondary: #3975d7;
+
+  --color-on-primary: #172b3a;
+
+  --color-text-main: #172b3a;
+  --color-text-secondary: #465e70;
+  --color-text-muted: #718596;
+
+  --color-status-success: #16a34a;
+  --color-status-warning: #d97706;
+  --color-status-danger: #dc2626;
+}
+
+/* The landing hero sits on a dark image overlay in both themes. */
+.hero-dark {
+  --color-bg-base: #080f14;
+  --color-bg-panel: #0b141b;
+  --color-bg-card: #101b23;
+  --color-bg-card-elevated: #14232d;
+  --color-border-subtle: #233640;
+  --color-on-primary: #080f14;
+  --color-text-main: #e6eef2;
+  --color-text-secondary: #a8b7c1;
+  --color-text-muted: #71838e;
 }
 
 body {

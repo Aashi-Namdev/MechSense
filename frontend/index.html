@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("mechsense-theme-v2") === "light") {
+            document.documentElement.classList.add("light");
+          }
+        } catch {}
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MechSense &bull; PREDICTIVE MAINTENANCE</title>

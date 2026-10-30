@@ -4,6 +4,7 @@ import { FiGrid, FiCpu, FiActivity, FiBarChart2, FiHome } from "react-icons/fi";
 
 import logo from "../assets/MechSenseLogo.png";
 import { kpiCards } from "../data/dashboard.js";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 const navItems = [
   { label: "Dashboard", to: "/dashboard", icon: FiGrid },
@@ -71,6 +72,10 @@ function Sidebar() {
 
       {/* System status */}
       <footer className="space-y-1 border-t border-border-subtle p-2 lg:space-y-2 lg:p-4">
+        <ThemeToggle
+          showLabel
+          className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-bg-card hover:text-text-secondary lg:justify-start lg:px-3"
+        />
         <Link
           to="/"
           className="group relative flex items-center justify-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-bg-card hover:text-text-secondary lg:justify-start lg:px-3"

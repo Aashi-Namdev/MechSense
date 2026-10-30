@@ -2,11 +2,13 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { targetDistribution } from "../../data/dashboard.js";
 import Card from "./Card.jsx";
 
+// colors for each target distribution category
 const COLORS = {
   Normal: "var(--color-status-success)",
   Failure: "var(--color-status-danger)",
 };
 
+// a custom tooltip style for the pie chart
 const tooltipStyle = {
   backgroundColor: "var(--color-bg-card-elevated)",
   border: "1px solid var(--color-border-subtle)",
@@ -16,6 +18,7 @@ const tooltipStyle = {
 };
 
 function TargetDistribution() {
+  // the total number of records for display in the center of the donut chart
   const total = targetDistribution.reduce((sum, item) => sum + item.value, 0);
 
   return (

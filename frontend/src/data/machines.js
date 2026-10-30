@@ -1,11 +1,13 @@
 import { CLASSIFICATION_THRESHOLD, riskBandFor } from "./constants.js";
 
+// function to determine the outcome of a prediction based on actual and predicted failure
 function outcomeFor(actualFailure, predictedFailure) {
   if (actualFailure === predictedFailure) return "Correct";
   if (predictedFailure === 1 && actualFailure === 0) return "False alarm";
   return "Missed"; // predicted 0, actual 1
 }
 
+// This is the raw dataset of machines, which includes sensor readings, actual failures, and predicted probabilities. The MOCK_MACHINES array is derived from this raw data and includes additional computed fields such as predicted failure, risk band, and outcome.
 const RAW_MACHINES = [
   {
     productId: "L55409",

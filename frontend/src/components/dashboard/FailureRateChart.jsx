@@ -40,7 +40,7 @@ function FailureRateChart({
               width={45}
             />
             <Tooltip
-              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+              cursor={{ fill: "var(--color-chart-cursor)" }}
               contentStyle={{
                 background: "var(--color-bg-card-elevated)",
                 border: "1px solid var(--color-border-subtle)",

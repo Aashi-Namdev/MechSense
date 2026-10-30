@@ -3,6 +3,7 @@ import { kpiCards, riskDistribution } from "../../data/dashboard.js";
 import { BAND_COLORS } from "../machines/riskColors.js";
 import Card from "./Card.jsx";
 
+// Define labels for each risk band
 const BAND_LABELS = {
   Low: "< 30%",
   Medium: "30% – 60%",

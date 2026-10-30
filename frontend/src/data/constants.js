@@ -51,6 +51,7 @@ export function primaryCause(likelyCauses = []) {
   );
 }
 
+// function to get the recommendation based on risk band and likely causes
 export function recommendationFor(riskBand, likelyCauses = []) {
   const primary = primaryCause(likelyCauses);
   if (primary && FAILURE_MODES[primary.mode]) {

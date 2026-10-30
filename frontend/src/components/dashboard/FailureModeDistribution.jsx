@@ -2,13 +2,14 @@ import { motion } from "motion/react";
 import { failureModeDistribution } from "../../data/dashboard.js";
 import Card from "./Card.jsx";
 
+// Define colors for each failure mode
 const MODE_COLORS = {
   HDF: "var(--color-primary)",
   OSF: "var(--color-status-warning)",
   PWF: "var(--color-secondary)",
   TWF: "var(--color-status-success)",
 };
-
+// A component that displays the distribution of failure modes.
 function FailureModeDistribution() {
   const highest = Math.max(
     ...failureModeDistribution.map((item) => item.count),

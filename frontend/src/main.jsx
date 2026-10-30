@@ -7,6 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 import "./index.css";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 import AppLayout from "./layouts/AppLayout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Machines from "./pages/Machines.jsx";
@@ -32,6 +33,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>,
 );
