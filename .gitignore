@@ -1,0 +1,21 @@
+# Node dependencies
+node_modules/
+
+# Python virtual environment
+ml-service/venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+.env.*
+
+# Build files
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
