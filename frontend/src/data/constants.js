@@ -3,9 +3,6 @@ export const CLASSIFICATION_THRESHOLD = 0.4;
 //  risk bands
 export const RISK_BAND_EDGES = { low: 0.3, high: 0.6 };
 
-// threshold for predicting failure mode
-export const MODE_THRESHOLD = 0.5;
-
 // simulated overstrain limit by machine type
 export const OVERSTRAIN_LIMIT = { L: 11000, M: 12000, H: 13000 };
 

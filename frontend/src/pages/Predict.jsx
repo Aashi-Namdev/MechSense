@@ -8,7 +8,8 @@ import {
   FiLoader,
   FiZap,
 } from "react-icons/fi";
-import { mockPredict } from "../data/predict.js";
+import { predictMachine } from "../services/api.js";
+import { riskBandFor } from "../data/constants.js";
 import Card from "../components/dashboard/Card.jsx";
 import RiskBadge from "../components/machines/RiskBadge.jsx";
 import LikelyCauseCard from "../components/machines/LikelyCauseCard.jsx";
@@ -62,6 +63,31 @@ const fieldClass =
 
 const selectClass = `${fieldClass} cursor-pointer`;
 
+const ML_UNAVAILABLE_MESSAGE =
+  "ML service is unavailable. Make sure the Python service is running.";
+
+// Convert the Express API response into the shape used by the existing cards.
+function toPredictionResult(prediction, formValues) {
+  const failureTypes = Array.isArray(prediction.failure_types)
+    ? prediction.failure_types
+    : [];
+  const failureTypeProbabilities = prediction.failure_type_probabilities ?? {};
+
+  return {
+    ...prediction,
+    input: formValues,
+    probability: prediction.failure_probability,
+    predictedFailure: prediction.predicted_failure ? 1 : 0,
+    riskBand: riskBandFor(prediction.failure_probability),
+    likelyCauses: prediction.predicted_failure
+      ? failureTypes.map((mode) => ({
+          mode,
+          probability: failureTypeProbabilities[mode] ?? 0,
+        }))
+      : [],
+  };
+}
+
 function Predict() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -86,12 +112,27 @@ function Predict() {
   async function onSubmit(formValues) {
     setLoading(true);
     setError("");
+    setResult(null);
 
     try {
-      const prediction = await mockPredict(formValues);
-      setResult(prediction);
-    } catch {
-      setError("Couldn't get a prediction, try again.");
+      const prediction = await predictMachine(formValues);
+      setResult(toPredictionResult(prediction, formValues));
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while getting the prediction.";
+
+      if (message === ML_UNAVAILABLE_MESSAGE) {
+        setError({
+          title: "Prediction temporarily unavailable",
+          message:
+            "We couldn't connect to the prediction engine. Please try again in a moment.",
+          helper: "Your sensor readings are safe. No prediction was generated.",
+        });
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -181,10 +222,22 @@ function Predict() {
 
               {/* Inline error */}
               {error && (
-                <p className="mt-4 flex items-center gap-2 rounded-md border border-status-danger/30 bg-status-danger/10 px-3 py-2 text-xs text-status-danger">
-                  <FiAlertTriangle className="shrink-0" />
-                  {error}
-                </p>
+                <div className="mt-4 flex items-start gap-2 rounded-md border border-status-danger/30 bg-status-danger/10 px-3 py-2 text-xs text-status-danger">
+                  <FiAlertTriangle className="mt-0.5 shrink-0" />
+                  {typeof error === "string" ? (
+                    <p className="min-w-0 break-words">{error}</p>
+                  ) : (
+                    <div className="min-w-0 space-y-1">
+                      <p className="font-semibold break-words">{error.title}</p>
+                      <p className="break-words">{error.message}</p>
+                      {error.helper && (
+                        <p className="break-words text-status-danger/80">
+                          {error.helper}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* Submit */}
@@ -283,7 +336,15 @@ function Predict() {
                   <div className="flex items-center justify-between py-3">
                     <span className="text-xs text-text-muted">Threshold</span>
                     <span className="text-xs font-medium tabular-nums text-text-secondary">
-                      {result.threshold}
+                      {(result.threshold * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-xs text-text-muted">
+                      Temperature Difference
+                    </span>
+                    <span className="text-xs font-medium tabular-nums text-text-secondary">
+                      {result.temperature_difference} K
                     </span>
                   </div>
                 </div>

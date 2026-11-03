@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { FiGrid, FiCpu, FiActivity, FiBarChart2, FiHome } from "react-icons/fi";
 
 import logo from "../assets/MechSenseLogo.png";
-import { kpiCards } from "../data/dashboard.js";
+import SystemStatus from "./SystemStatus.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 
 const navItems = [
@@ -83,18 +83,7 @@ function Sidebar() {
           <FiHome className="shrink-0 text-[18px] text-text-muted transition-colors group-hover:text-text-secondary" />
           <span className="hidden lg:block">Go Back</span>
         </Link>
-        <div className="flex items-center justify-center gap-3 rounded-md bg-bg-card px-3 py-2.5 lg:justify-start">
-          <span className="h-2 w-2 shrink-0 rounded-full bg-status-success" />
-          <div className="hidden min-w-0 lg:block">
-            <p className="text-xs font-medium text-text-secondary">
-              System online
-            </p>
-            <p className="truncate text-[11px] text-text-muted">
-              Monitoring {kpiCards.totalRecords.toLocaleString()} machine
-              records
-            </p>
-          </div>
-        </div>
+        <SystemStatus />
         <p className="mt-3 hidden text-center text-[10px]  tracking-widest text-text-muted lg:block">
           MECHSENSE &bull; IIoT
         </p>
