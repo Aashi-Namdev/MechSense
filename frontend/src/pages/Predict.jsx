@@ -226,13 +226,15 @@ function Predict() {
                 <div className="mt-4 flex items-start gap-2 rounded-md border border-status-danger/30 bg-status-danger/10 px-3 py-2 text-xs text-status-danger">
                   <FiAlertTriangle className="mt-0.5 shrink-0" />
                   {typeof error === "string" ? (
-                    <p className="min-w-0 break-words">{error}</p>
+                    <p className="min-w-0 wrap-break-word">{error}</p>
                   ) : (
                     <div className="min-w-0 space-y-1">
-                      <p className="font-semibold break-words">{error.title}</p>
-                      <p className="break-words">{error.message}</p>
+                      <p className="font-semibold wrap-break-word">
+                        {error.title}
+                      </p>
+                      <p className="wrap-break-word">{error.message}</p>
                       {error.helper && (
-                        <p className="break-words text-status-danger/80">
+                        <p className="wrap-break-word text-status-danger/80">
                           {error.helper}
                         </p>
                       )}
