@@ -19,11 +19,11 @@ function LikelyCauseCard({ machine }) {
             <span className="rounded-md bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
               {primary.mode}
             </span>
-            <span className="text-xs text-text-muted">Highest probability</span>
+            <span className="text-xs text-text-muted">Most likely</span>
           </div>
 
           <p className="mt-2 text-2xl font-semibold tracking-tight text-text-main">
-            {meta?.label ?? "Unclassified failure mode"}
+            {meta?.label ?? "Unidentified failure mode"}
           </p>
 
           <div className="mt-4 divide-y divide-border-subtle border-y border-border-subtle">
@@ -65,8 +65,7 @@ function LikelyCauseCard({ machine }) {
           )}
 
           <p className="mt-4 text-xs leading-relaxed text-text-muted">
-            This is not confirmed, but likely based on the model&apos;s analysis
-            of the input data.
+            This is the model&apos;s best estimate, not a confirmed diagnosis.
           </p>
         </>
       ) : (
@@ -82,8 +81,8 @@ function LikelyCauseCard({ machine }) {
 
           <p className="mt-4 text-xs leading-relaxed text-text-muted">
             {machine.predictedFailure === 1
-              ? "The probability is above the threshold, but no specific failure mode stood out, so the recommendation falls back to a general inspection."
-              : "There is no failure predicted, so no failure mode is flagged."}
+              ? "The model flagged a possible failure but couldn't identify a specific cause. A general inspection is recommended."
+              : "No failure was predicted, so no specific cause is shown."}
           </p>
         </>
       )}

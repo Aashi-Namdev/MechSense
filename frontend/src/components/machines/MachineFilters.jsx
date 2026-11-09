@@ -1,8 +1,18 @@
 import { motion } from "motion/react";
 import { FiSearch } from "react-icons/fi";
 
-const RISK_OPTIONS = ["All", "Low", "Medium", "High"];
-const TYPE_OPTIONS = ["All", "H", "M", "L"];
+const RISK_OPTIONS = [
+  { value: "All", label: "All risks" },
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+];
+const TYPE_OPTIONS = [
+  { value: "All", label: "All types" },
+  { value: "H", label: "H" },
+  { value: "M", label: "M" },
+  { value: "L", label: "L" },
+];
 
 const selectClass =
   "rounded-md border border-border-subtle bg-bg-card px-3 py-2 text-sm text-text-main focus:border-primary focus:outline-none cursor-pointer";
@@ -14,8 +24,6 @@ function MachineFilters({
   setTypeFilter,
   searchText,
   setSearchText,
-  shown,
-  total,
 }) {
   return (
     <motion.div
@@ -37,39 +45,34 @@ function MachineFilters({
       </div>
 
       <label className="flex items-center gap-2">
-        <span className="text-xs text-text-muted">Risk</span>
+        <span className="text-xs text-text-muted">Risk level</span>
         <select
           value={riskFilter}
           onChange={(e) => setRiskFilter(e.target.value)}
           className={selectClass}
         >
           {RISK_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
       </label>
 
       <label className="flex items-center gap-2">
-        <span className="text-xs text-text-muted">Type</span>
+        <span className="text-xs text-text-muted">Machine type</span>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
           className={selectClass}
         >
           {TYPE_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
       </label>
-
-      <span className="ml-auto whitespace-nowrap text-xs text-text-muted">
-        Showing <span className="font-medium text-text-secondary">{shown}</span>{" "}
-        of {total} records
-      </span>
     </motion.div>
   );
 }

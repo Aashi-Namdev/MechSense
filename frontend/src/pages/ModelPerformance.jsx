@@ -1,74 +1,10 @@
 import { motion } from "motion/react";
-import { FiTrendingUp } from "react-icons/fi";
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { FiInfo } from "react-icons/fi";
 import Card from "../components/dashboard/Card.jsx";
 import {
   finalConfusionMatrix,
   finalModel,
-  modelComparisonTable,
-  prCurves,
-  rocCurves,
-  thresholdTable,
 } from "../data/modelComparison.js";
-
-// Color per model
-const MODEL_COLORS = {
-  "Logistic Regression": "var(--color-text-muted)",
-  "Decision Tree": "var(--color-status-warning)",
-  "Random Forest": "var(--color-secondary)",
-  XGBoost: "var(--color-primary)",
-};
-
-const ROC_SERIES = [
-  { name: "Logistic Regression", data: rocCurves.logisticRegression },
-  { name: "Decision Tree", data: rocCurves.decisionTree },
-  { name: "Random Forest", data: rocCurves.randomForest },
-  { name: "XGBoost", data: rocCurves.xgboost },
-];
-
-const PR_SERIES = [
-  { name: "Logistic Regression", data: prCurves.logisticRegression },
-  { name: "Decision Tree", data: prCurves.decisionTree },
-  { name: "Random Forest", data: prCurves.randomForest },
-  { name: "XGBoost", data: prCurves.xgboost },
-];
-
-const TOOLTIP_CONTENT_STYLE = {
-  backgroundColor: "var(--color-bg-card-elevated)",
-  border: "1px solid var(--color-border-subtle)",
-  borderRadius: "8px",
-  padding: "8px 12px",
-  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-};
-
-const TOOLTIP_LABEL_STYLE = {
-  color: "var(--color-text-main)",
-  fontSize: 12,
-  fontWeight: 500,
-  marginBottom: 4,
-};
-
-const TOOLTIP_ITEM_STYLE = {
-  color: "var(--color-text-secondary)",
-  fontSize: 12,
-  padding: 0,
-};
-
-const LEGEND_STYLE = {
-  paddingBottom: 8,
-  fontSize: 12,
-  color: "var(--color-text-secondary)",
-};
 
 function MetricCard({ label, value, unit = "%" }) {
   return (
@@ -77,7 +13,7 @@ function MetricCard({ label, value, unit = "%" }) {
         {label}
       </p>
       <p className="mt-1.5 text-xl font-semibold tabular-nums tracking-tight text-text-main">
-        {value}
+        {typeof value === "number" ? value.toFixed(2) : value}
         {unit && (
           <span className="text-sm font-normal text-text-muted">{unit}</span>
         )}
@@ -137,7 +73,7 @@ function PipelineStage({ label, title, description, isLast }) {
 function ModelPerformance() {
   const testTotal =
     finalConfusionMatrix.support.normal + finalConfusionMatrix.support.failure;
-  const selectedModel = finalModel.name.split(" (")[0];
+  const stage1Threshold = finalModel.threshold.toFixed(2);
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -151,149 +87,61 @@ function ModelPerformance() {
           Model Performance
         </h1>
         <p className="mt-1 text-sm text-text-muted">
-          Evaluation of the Stage-1 predictive maintenance model on the test
-          dataset.
+          An overview of the machine learning models used in MechSense and their
+          evaluation results.
         </p>
       </motion.header>
 
-      {/* Model selection statement */}
-      <div className="flex items-start gap-3 rounded-xl border border-border-subtle bg-bg-card px-4 py-3.5">
-        <FiTrendingUp className="mt-0.5 shrink-0 text-base text-primary" />
-        <p className="text-sm leading-relaxed text-text-secondary">
-          {selectedModel} selected for its recall-precision balance, achieving{" "}
-          {finalModel.rocAuc}% ROC-AUC.
-        </p>
-      </div>
-
       {/* Prediction pipeline */}
       <Card title="Prediction Pipeline" delay={0.05}>
-        <p className="mb-4 text-xs leading-relaxed text-text-muted">
-          The application runs a two-stage pipeline. The metrics on this page
-          describe Stage 1.
-        </p>
-
         <div className="max-w-2xl space-y-1">
           <PipelineStage
             label="Stage 1"
-            title="Failure Risk"
-            description="XGBoost estimates the probability of machine failure."
+            title="XGBoost Failure Classifier"
+            description="Predicts the probability of machine failure using sensor readings. A probability of 0.40 or higher is treated as a predicted failure."
           />
           <PipelineStage
             label="Stage 2"
-            title="Failure Mode"
-            description="If the Stage-1 threshold is crossed, the system estimates the likely failure mode(s)."
+            title="Logistic Regression MultiOutputClassifier"
+            description="Runs when Stage 1 predicts a failure. It estimates probabilities for five failure types: TWF, HDF, PWF, OSF and RNF. Multiple failure types can be predicted together."
           />
           <PipelineStage
             isLast
             label="Application logic"
-            title="Recommendation"
-            description="A rule-based layer calculates quantitative maintenance targets from the simulated dataset rules."
+            title="Maintenance Recommendation"
+            description="Maintenance recommendations are generated using rule-based application logic, not a third trained ML model."
           />
         </div>
-
-        <p className="mt-4 text-xs leading-relaxed text-text-muted">
-          Stage 1 metrics describe the XGBoost model only. Stage 2 and the
-          maintenance targets are rule-based application logic, not a trained
-          model, so no accuracy metrics are reported for them.
-        </p>
       </Card>
 
-      {/* Final model metrics */}
-      <Card title="Final Model Metrics">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-7">
+      {/* Reconstructed Stage 1 metrics */}
+      <Card title="Reconstructed Stage 1 Evaluation">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <MetricCard label="Accuracy" value={finalModel.accuracy} />
           <MetricCard label="Precision" value={finalModel.precision} />
           <MetricCard label="Recall" value={finalModel.recall} />
-          <MetricCard label="F1" value={finalModel.f1Score} />
-          <MetricCard label="ROC-AUC" value={finalModel.rocAuc} />
-          <MetricCard label="PR-AUC" value={finalModel.prAuc} />
-          <MetricCard
-            label="Threshold"
-            value={finalModel.threshold.toFixed(2)}
-            unit=""
-          />
+          <MetricCard label="F1-score" value={finalModel.f1Score} />
         </div>
-      </Card>
 
-      {/* Model comparison table */}
-      <Card title="Model Comparison">
-        <p className="mb-4 text-xs text-text-muted">
-          All models evaluated at the default 0.50 threshold.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-160 text-sm">
-            <thead className="border-b border-border-subtle bg-bg-card-elevated/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Model
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Accuracy
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Precision
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Recall
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  F1
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  ROC-AUC
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  PR-AUC
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-subtle">
-              {modelComparisonTable.map((row) => {
-                const isSelected = row.model === "XGBoost";
-                return (
-                  <tr
-                    key={row.model}
-                    className={isSelected ? "bg-bg-card-elevated" : ""}
-                  >
-                    <td className="whitespace-nowrap px-4 py-3 font-medium text-text-main">
-                      {row.model}
-                      {isSelected && (
-                        <span className="ml-2 inline-flex rounded-md bg-primary/15 px-1.5 py-0.5 align-middle text-[10px] font-medium uppercase tracking-wide text-primary">
-                          Selected
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.accuracy}%
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.precision}%
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.recall}%
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.f1Score}%
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.rocAuc}%
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                      {row.prAuc}%
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="mt-4 flex items-start gap-3 rounded-lg border border-status-warning/30 bg-status-warning/10 px-3.5 py-3">
+          <FiInfo className="mt-0.5 shrink-0 text-base text-status-warning" />
+          <p className="text-xs leading-relaxed text-text-secondary">
+            These results were reconstructed using a stratified 80/20 split
+            (random state 42). The reconstructed split reproduces the reported
+            confusion matrix, but the original training and test records could
+            not be independently verified. These metrics should not be
+            interpreted as confirmed independent test performance.
+          </p>
         </div>
       </Card>
 
       {/* Confusion matrix */}
       <Card title="Confusion Matrix">
-        <p className="mb-4 text-xs text-text-muted">
-          Final Model — Test Set ({testTotal.toLocaleString()} records),
-          Threshold {finalModel.threshold.toFixed(2)}
+        <p className="mb-4 text-xs leading-relaxed text-text-muted">
+          Confusion matrix from the reconstructed{" "}
+          {testTotal.toLocaleString()}-record stratified evaluation split at a
+          threshold of {stage1Threshold}. Original test records could not be
+          verified.
         </p>
         <div className="mx-auto w-full max-w-md">
           <div className="grid grid-cols-3 items-stretch gap-2 text-center">
@@ -334,219 +182,41 @@ function ModelPerformance() {
             />
           </div>
           <p className="mt-4 text-xs leading-relaxed text-text-muted">
-            At the {finalModel.threshold.toFixed(2)} threshold, the model missed{" "}
+            At the {stage1Threshold} threshold, the model missed{" "}
             {finalConfusionMatrix.falseNegative} of{" "}
-            {finalConfusionMatrix.support.failure} actual failures.
+            {finalConfusionMatrix.support.failure} actual failures in this
+            reconstructed evaluation.
           </p>
         </div>
       </Card>
 
-      {/* ROC and PR curves */}
-      <div className="grid gap-4 xl:grid-cols-2">
-        <Card title="ROC Curve">
-          <p className="mb-4 text-xs text-text-muted">
-            True positive rate vs false positive rate.
+      {/* Model information */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card title="Stage 1 Threshold">
+          <p className="text-2xl font-semibold tabular-nums tracking-tight text-text-main">
+            {stage1Threshold}
           </p>
-          <div style={{ height: 280 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart margin={{ top: 10, right: 12, bottom: 8, left: 4 }}>
-                <CartesianGrid
-                  stroke="var(--color-border-subtle)"
-                  strokeDasharray="3 3"
-                />
-                <XAxis
-                  type="number"
-                  dataKey="fpr"
-                  domain={[0, 1]}
-                  tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={{ stroke: "var(--color-border-subtle)" }}
-                  label={{
-                    value: "False Positive Rate",
-                    position: "outsideBottom",
-                    offset: -16,
-                    fill: "var(--color-text-muted)",
-                    fontSize: 11,
-                  }}
-                />
-                <YAxis
-                  type="number"
-                  domain={[0, 1]}
-                  tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={40}
-                  label={{
-                    value: "True Positive Rate",
-                    angle: -90,
-                    position: "insideLeft",
-                    style: {
-                      textAnchor: "middle",
-                      fill: "var(--color-text-muted)",
-                      fontSize: 11,
-                    },
-                  }}
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_CONTENT_STYLE}
-                  labelStyle={TOOLTIP_LABEL_STYLE}
-                  itemStyle={TOOLTIP_ITEM_STYLE}
-                />
-                <Legend verticalAlign="top" wrapperStyle={LEGEND_STYLE} />
-                {ROC_SERIES.map((series) => (
-                  <Line
-                    key={series.name}
-                    name={series.name}
-                    data={series.data}
-                    dataKey="tpr"
-                    type="monotone"
-                    stroke={MODEL_COLORS[series.name]}
-                    strokeWidth={series.name === "XGBoost" ? 2.5 : 1.75}
-                    dot={false}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <p className="mt-2 text-xs leading-relaxed text-text-muted">
+            XGBoost failure probability at or above this value triggers Stage 2.
+          </p>
         </Card>
-
-        <Card title="Precision-Recall Curve">
-          <p className="mb-4 text-xs text-text-muted">
-            Precision vs recall. Baseline is the dataset failure rate.
+        <Card title="Stage 2 Threshold" delay={0.05}>
+          <p className="text-2xl font-semibold tabular-nums tracking-tight text-text-main">
+            0.50
           </p>
-          <div style={{ height: 280 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart margin={{ top: 10, right: 12, bottom: 8, left: 4 }}>
-                <CartesianGrid
-                  stroke="var(--color-border-subtle)"
-                  strokeDasharray="3 3"
-                />
-                <XAxis
-                  type="number"
-                  dataKey="recall"
-                  domain={[0, 1]}
-                  tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={{ stroke: "var(--color-border-subtle)" }}
-                  label={{
-                    value: "Recall",
-                    position: "ousideBottom",
-                    offset: -16,
-                    fill: "var(--color-text-muted)",
-                    fontSize: 11,
-                  }}
-                />
-                <YAxis
-                  type="number"
-                  domain={[0, 1]}
-                  tick={{ fill: "var(--color-text-muted)", fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={40}
-                  label={{
-                    value: "Precision",
-                    angle: -90,
-                    position: "insideLeft",
-                    style: {
-                      textAnchor: "middle",
-                      fill: "var(--color-text-muted)",
-                      fontSize: 11,
-                    },
-                  }}
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_CONTENT_STYLE}
-                  labelStyle={TOOLTIP_LABEL_STYLE}
-                  itemStyle={TOOLTIP_ITEM_STYLE}
-                />
-                <Legend verticalAlign="top" wrapperStyle={LEGEND_STYLE} />
-                <ReferenceLine
-                  y={prCurves.baselinePrecision}
-                  stroke="var(--color-text-muted)"
-                  strokeDasharray="4 4"
-                  label={{
-                    value: "Baseline",
-                    position: "insideTopRight",
-                    fill: "var(--color-text-muted)",
-                    fontSize: 11,
-                  }}
-                />
-                {PR_SERIES.map((series) => (
-                  <Line
-                    key={series.name}
-                    name={series.name}
-                    data={series.data}
-                    dataKey="precision"
-                    type="monotone"
-                    stroke={MODEL_COLORS[series.name]}
-                    strokeWidth={series.name === "XGBoost" ? 2.5 : 1.75}
-                    dot={false}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <p className="mt-2 text-xs leading-relaxed text-text-muted">
+            A failure type is included when its predicted probability is at or
+            above this value.
+          </p>
         </Card>
       </div>
 
-      {/* Threshold selection */}
-      <Card title="Threshold Selection">
-        <p className="mb-4 text-xs leading-relaxed text-text-muted">
-          Threshold {finalModel.threshold.toFixed(2)} was selected to maintain
-          high failure recall while accepting additional false alarms. At this
-          threshold, predictions classified as failure are passed to the second
-          stage for likely failure-mode analysis.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-120 text-sm">
-            <thead className="border-b border-border-subtle bg-bg-card-elevated/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Threshold
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Precision
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  Recall
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-text-secondary">
-                  F1
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-subtle">
-              {thresholdTable.map((row) => {
-                const isSelected = row.selected === true;
-                return (
-                  <tr
-                    key={row.threshold}
-                    className={isSelected ? "bg-bg-card-elevated" : ""}
-                  >
-                    <td className="whitespace-nowrap px-4 py-2.5 font-medium tabular-nums text-text-main">
-                      {row.threshold.toFixed(2)}
-                      {isSelected && (
-                        <span className="ml-2 inline-flex rounded-md bg-primary/15 px-1.5 py-0.5 align-middle text-[10px] font-medium uppercase tracking-wide text-primary">
-                          Selected
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-text-secondary">
-                      {row.precision}%
-                    </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-text-secondary">
-                      {row.recall}%
-                    </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-text-secondary">
-                      {row.f1}%
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      <p className="text-xs leading-relaxed text-text-muted">
+        Stage 1 runs for every sensor reading. Only readings classified as
+        failures continue to Stage 2, where the multi-output classifier
+        estimates the five failure-type probabilities. Maintenance
+        recommendations are then selected by rule-based application logic.
+      </p>
     </div>
   );
 }

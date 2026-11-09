@@ -58,7 +58,7 @@ function PredictionCard({ machine }) {
         </div>
 
         <div className="flex items-center justify-between py-2.5">
-          <span className="text-xs text-text-muted">Threshold</span>
+          <span className="text-xs text-text-muted">Decision threshold</span>
           <span className="text-sm font-medium tabular-nums text-text-secondary">
             {(CLASSIFICATION_THRESHOLD * 100).toFixed(0)}%
           </span>

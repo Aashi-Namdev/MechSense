@@ -9,10 +9,9 @@ import {
   YAxis,
   ZAxis,
 } from "recharts";
-import { torqueVsRpmScatter } from "../../data/dashboard.js";
 import Card from "./Card.jsx";
 
-function TorqueRpmScatter() {
+function TorqueRpmScatter({ data = { normal: [], failed: [] } }) {
   return (
     <Card title="Torque vs Rotational Speed">
       <div style={{ height: 280 }}>
@@ -87,12 +86,12 @@ function TorqueRpmScatter() {
             />
             <Scatter
               name="Normal"
-              data={torqueVsRpmScatter.normal}
+              data={data.normal}
               fill="var(--color-secondary)"
             />
             <Scatter
               name="Failed"
-              data={torqueVsRpmScatter.failed}
+              data={data.failed}
               fill="var(--color-status-danger)"
             />
           </ScatterChart>

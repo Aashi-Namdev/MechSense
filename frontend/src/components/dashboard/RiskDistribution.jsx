@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { kpiCards, riskDistribution } from "../../data/dashboard.js";
 import { BAND_COLORS } from "../machines/riskColors.js";
 import Card from "./Card.jsx";
 
@@ -10,10 +9,12 @@ const BAND_LABELS = {
   High: ">= 60%",
 };
 
-function RiskDistribution() {
-  const { bands } = riskDistribution;
+function RiskDistribution({ data = { bands: [] } }) {
+  const bands = data.bands ?? [];
   const total = bands.reduce((sum, band) => sum + band.count, 0);
-  const highest = Math.max(...bands.map((band) => band.count));
+  const highest = Math.max(1, ...bands.map((band) => band.count));
+  const highRiskCount =
+    bands.find((band) => band.band === "High")?.count ?? 0;
 
   return (
     <Card title="Prediction Risk Distribution">
@@ -59,7 +60,7 @@ function RiskDistribution() {
       <p className="mt-5 rounded-lg bg-bg-card-elevated px-3.5 py-3 text-xs leading-relaxed text-text-muted">
         Band edges use predicted failure probability.{" "}
         <span className="text-text-secondary">
-          {kpiCards.highRiskCount} High-Risk Predictions
+          {highRiskCount.toLocaleString()} High-Risk Predictions
         </span>{" "}
         sit at or above 60%.
       </p>

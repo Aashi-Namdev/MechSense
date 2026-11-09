@@ -82,7 +82,7 @@ function osfRecommendation(readings) {
   if (torque === null || toolWear === null) {
     return fallbackRecommendation(
       "OSF",
-      "Torque or tool wear is missing or invalid, so the overstrain calculation could not be run.",
+      "Torque or tool wear is not available, so the overstrain check couldn't run.",
     );
   }
 
@@ -225,7 +225,7 @@ function pwfRecommendation(readings) {
   if (torque === null || rpm === null || torque < 0 || rpm <= 0) {
     return fallbackRecommendation(
       "PWF",
-      "Power needs a valid torque and a positive RPM, so a power target could not be calculated from these readings.",
+      "Power needs a valid torque and a positive RPM, so a power target couldn't be calculated from these readings.",
     );
   }
 
@@ -310,7 +310,7 @@ function hdfRecommendation(readings) {
   if (airTemp === null || processTemp === null || rpm === null) {
     return fallbackRecommendation(
       "HDF",
-      "Air temperature, process temperature, or RPM is missing or invalid, so the heat-dissipation rule could not be checked.",
+      "Air temperature, process temperature, or RPM is not available, so the heat-dissipation rule couldn't be checked.",
     );
   }
 
@@ -387,7 +387,7 @@ function twfRecommendation(readings) {
   if (toolWear === null) {
     return fallbackRecommendation(
       "TWF",
-      "Tool wear is missing or invalid, so the tool-wear reference check could not be run.",
+      "Tool wear is not available, so the tool-wear check couldn't run.",
     );
   }
 
@@ -502,7 +502,7 @@ function compactForRecommendation(recommendation, readings) {
         alternative: null,
         options: null,
         optionsNote: null,
-        why: "A torque target could not be calculated from the current readings.",
+        why: "A torque target couldn't be calculated from the current readings.",
       };
     }
 
@@ -535,7 +535,7 @@ function compactForRecommendation(recommendation, readings) {
         alternative: null,
         options: null,
         optionsNote: null,
-        why: "A power target could not be calculated from the current readings.",
+        why: "A power target couldn't be calculated from the current readings.",
       };
     }
 
@@ -611,7 +611,7 @@ function compactForRecommendation(recommendation, readings) {
         alternative: null,
         options: null,
         optionsNote: null,
-        why: "A heat-dissipation target could not be calculated from the current readings.",
+        why: "A heat-dissipation target couldn't be calculated from the current readings.",
       };
     }
 
@@ -669,7 +669,7 @@ function compactForRecommendation(recommendation, readings) {
         alternative: null,
         options: null,
         optionsNote: null,
-        why: "A tool-wear reference check could not be run from the current readings.",
+        why: "A tool-wear check couldn't run from the current readings.",
       };
     }
 

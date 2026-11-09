@@ -1,5 +1,4 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { targetDistribution } from "../../data/dashboard.js";
 import Card from "./Card.jsx";
 
 // colors for each target distribution category
@@ -17,9 +16,9 @@ const tooltipStyle = {
   fontSize: 12,
 };
 
-function TargetDistribution() {
+function TargetDistribution({ data = [] }) {
   // the total number of records for display in the center of the donut chart
-  const total = targetDistribution.reduce((sum, item) => sum + item.value, 0);
+  const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <Card title="Historical Failure Distribution">
@@ -29,7 +28,7 @@ function TargetDistribution() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={targetDistribution}
+                data={data}
                 dataKey="value"
                 nameKey="label"
                 innerRadius={52}
@@ -37,7 +36,7 @@ function TargetDistribution() {
                 paddingAngle={2}
                 stroke="none"
               >
-                {targetDistribution.map((item) => (
+                {data.map((item) => (
                   <Cell key={item.label} fill={COLORS[item.label]} />
                 ))}
               </Pie>
@@ -56,7 +55,7 @@ function TargetDistribution() {
 
         {/* Side stats */}
         <div className="w-full space-y-3">
-          {targetDistribution.map((item) => (
+          {data.map((item) => (
             <div
               key={item.label}
               className="flex items-center justify-between rounded-lg bg-bg-card-elevated px-3.5 py-3"

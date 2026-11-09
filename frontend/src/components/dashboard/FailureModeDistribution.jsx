@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { failureModeDistribution } from "../../data/dashboard.js";
 import Card from "./Card.jsx";
 
 // Define colors for each failure mode
@@ -8,17 +7,16 @@ const MODE_COLORS = {
   OSF: "var(--color-status-warning)",
   PWF: "var(--color-secondary)",
   TWF: "var(--color-status-success)",
+  RNF: "var(--color-text-muted)",
 };
 // A component that displays the distribution of failure modes.
-function FailureModeDistribution() {
-  const highest = Math.max(
-    ...failureModeDistribution.map((item) => item.count),
-  );
+function FailureModeDistribution({ data = [] }) {
+  const highest = Math.max(1, ...data.map((item) => item.count));
 
   return (
     <Card title="Failure Mode Distribution" delay={0.08}>
       <div className="space-y-3.5">
-        {failureModeDistribution.map((item) => {
+        {data.map((item) => {
           const width = (item.count / highest) * 100;
           const color = MODE_COLORS[item.mode] ?? "var(--color-text-muted)";
 

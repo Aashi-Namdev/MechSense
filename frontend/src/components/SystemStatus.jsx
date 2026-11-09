@@ -6,15 +6,15 @@ const HEALTH_TIMEOUT_MS = 12000;
 const CHECKING = {
   tone: "text-text-muted",
   dot: "bg-text-muted",
-  label: "Checking system",
-  detail: "Connecting to backend...",
+  label: "Checking status",
+  detail: "Connecting…",
 };
 
 const TIMEOUT = {
   tone: "text-status-danger",
   dot: "bg-status-danger",
-  label: "Backend timeout",
-  detail: "Health check timed out after 12 seconds",
+  label: "Status check timed out",
+  detail: "The service took too long to respond.",
 };
 
 function statusFromHealth(health) {
@@ -22,11 +22,8 @@ function statusFromHealth(health) {
     return {
       tone: "text-status-danger",
       dot: "bg-status-danger",
-      label: "Backend error",
-      detail:
-        typeof health?.error === "string"
-          ? health.error
-          : "Express returned an unexpected health response",
+      label: "Service unavailable",
+      detail: "We couldn't get the current system status.",
     };
   }
 
@@ -36,26 +33,44 @@ function statusFromHealth(health) {
     return {
       tone: "text-status-danger",
       dot: "bg-status-danger",
-      label: "ML status unavailable",
-      detail: "Express did not return ML service health details",
+      label: "Prediction status unavailable",
+      detail: "The prediction service status couldn't be checked.",
     };
   }
 
-  if (typeof ml.status !== "string" || typeof ml.models_loaded !== "boolean") {
+  if (typeof ml.status !== "string") {
     return {
       tone: "text-status-danger",
       dot: "bg-status-danger",
-      label: "ML status unavailable",
-      detail: "Express returned malformed ML service health details",
+      label: "Prediction status unavailable",
+      detail: "The prediction service status couldn't be checked.",
     };
   }
 
-  if (ml.status !== "ok" || ml.models_loaded !== true) {
+  if (ml.status !== "ok") {
     return {
       tone: "text-status-warning",
       dot: "bg-status-warning",
-      label: "ML service offline",
-      detail: "Express is running, ML models unavailable",
+      label: "Prediction service offline",
+      detail: "Predictions are temporarily unavailable.",
+    };
+  }
+
+  if (typeof ml.models_loaded !== "boolean") {
+    return {
+      tone: "text-status-danger",
+      dot: "bg-status-danger",
+      label: "Prediction status unavailable",
+      detail: "The prediction service status couldn't be checked.",
+    };
+  }
+
+  if (ml.models_loaded !== true) {
+    return {
+      tone: "text-status-warning",
+      dot: "bg-status-warning",
+      label: "Prediction service offline",
+      detail: "Predictions are temporarily unavailable.",
     };
   }
 
@@ -63,7 +78,7 @@ function statusFromHealth(health) {
     tone: "text-status-success",
     dot: "bg-status-success",
     label: "System online",
-    detail: "Express online · ML models loaded",
+    detail: "All services are ready.",
   };
 }
 
@@ -91,8 +106,8 @@ function SystemStatus() {
           setStatus({
             tone: "text-status-danger",
             dot: "bg-status-danger",
-            label: "Backend offline",
-            detail: "Start Express on port 5000",
+            label: "Service offline",
+            detail: "We can't reach the service right now.",
           });
         }
       } finally {

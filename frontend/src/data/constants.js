@@ -37,7 +37,7 @@ export const FAILURE_MODES = {
   RNF: {
     label: "Random failure",
     part: "No specific part",
-    action: "No specific part identified, do a general inspection",
+    action: "No specific part identified; perform a general inspection",
   },
 };
 
@@ -54,7 +54,7 @@ export function recommendationFor(riskBand, likelyCauses = []) {
   if (primary && FAILURE_MODES[primary.mode]) {
     return FAILURE_MODES[primary.mode].action;
   }
-  if (riskBand === "High") return "Schedule immediate inspection";
-  if (riskBand === "Medium") return "Monitor closely, schedule routine check";
+  if (riskBand === "High") return "Schedule an immediate inspection";
+  if (riskBand === "Medium") return "Monitor closely and schedule a routine check";
   return "No action needed";
 }

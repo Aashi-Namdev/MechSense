@@ -17,10 +17,10 @@ function OutcomeCard({ machine }) {
     machine.actualFailure === 1 ? (machine.actualFailureModes ?? []) : [];
 
   return (
-    <Card title="Actual Dataset Outcome" delay={0.1}>
+    <Card title="Recorded Outcome" delay={0.1}>
       <p className="text-sm text-text-muted">
-        Recorded label from the dataset for this record — ground truth, not a
-        model output.
+        The actual result recorded for this machine in the dataset. This is not
+        a model prediction.
       </p>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -75,7 +75,7 @@ function OutcomeCard({ machine }) {
       {recordedModes.length > 0 && (
         <div className="mt-4 flex flex-wrap items-center gap-2 rounded-lg bg-bg-card-elevated px-3.5 py-3">
           <span className="text-xs text-text-muted">
-            Recorded Failure Mode(s)
+            Recorded failure modes
           </span>
           {recordedModes.map((mode) => (
             <span
@@ -90,8 +90,8 @@ function OutcomeCard({ machine }) {
       )}
 
       <p className="mt-4 text-xs leading-relaxed text-text-muted">
-        The dataset&apos;s recorded outcome and failure mode(s) are used to
-        evaluate the model&apos;s predictions.
+        The recorded outcome and failure modes are used to check how well the
+        model performed.
       </p>
     </Card>
   );

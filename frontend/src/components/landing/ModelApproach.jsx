@@ -62,10 +62,9 @@ function ModelApproach() {
         </p>
         <p>
           <strong className="text-text-main">Maintenance logic:</strong> The
-          predicted mode is passed to a rule-based layer that calculates a
-          quantitative target from the project&apos;s simulated dataset rules.
-          These targets are deterministic application logic, not ML
-          predictions.
+          predicted mode is passed to a rule-based step that calculates a target
+          from the project&apos;s simulated dataset rules. These targets are not
+          model predictions.
         </p>
         <p>
           The classification threshold was tuned to 0.40 to maintain high failure

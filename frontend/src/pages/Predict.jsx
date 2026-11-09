@@ -63,10 +63,7 @@ const fieldClass =
 
 const selectClass = `${fieldClass} cursor-pointer`;
 
-const ML_UNAVAILABLE_MESSAGE =
-  "ML service is unavailable. Make sure the Python service is running.";
-
-// Convert the Express API response into the shape used by the existing cards.
+// Convert the API response into the shape used by the existing cards.
 function toPredictionResult(prediction, formValues) {
   const failureTypes = Array.isArray(prediction.failure_types)
     ? prediction.failure_types
@@ -118,20 +115,24 @@ function Predict() {
       const prediction = await predictMachine(formValues);
       setResult(toPredictionResult(prediction, formValues));
     } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Something went wrong while getting the prediction.";
+      const status = err instanceof Error ? err.status : undefined;
+      const serviceUnavailable =
+        !status || status === 503 || status === 504 || status >= 500;
 
-      if (message === ML_UNAVAILABLE_MESSAGE) {
+      if (serviceUnavailable) {
         setError({
           title: "Prediction temporarily unavailable",
           message:
-            "We couldn't connect to the prediction engine. Please try again in a moment.",
-          helper: "Your sensor readings are safe. No prediction was generated.",
+            "The prediction service is temporarily unavailable. Please try again in a moment.",
+          helper:
+            "Your readings are still in the form. No prediction was generated.",
         });
       } else {
-        setError(message);
+        setError(
+          err instanceof Error && err.message
+            ? err.message
+            : "Something went wrong. Please try again.",
+        );
       }
     } finally {
       setLoading(false);
@@ -150,8 +151,8 @@ function Predict() {
           Predict Failure Risk
         </h1>
         <p className="mt-1 text-sm text-text-muted">
-          Enter machine sensor readings to get a failure probability, a risk
-          band, and a recommended action.
+          Enter machine sensor readings to get a failure probability, risk
+          level, and recommended action.
         </p>
       </motion.header>
 
@@ -164,7 +165,7 @@ function Predict() {
                 {/* Type */}
                 <div>
                   <label className="mb-1.5 block text-sm text-text-secondary">
-                    Type
+                    Machine Type
                   </label>
                   <select {...register("type")} className={selectClass}>
                     <option value="H">H</option>
@@ -191,7 +192,7 @@ function Predict() {
                       step={step}
                       {...register(name, {
                         valueAsNumber: true,
-                        required: "Required",
+                        required: "Please enter a value.",
                       })}
                       className={fieldClass}
                     />
@@ -249,7 +250,7 @@ function Predict() {
                 {loading ? (
                   <>
                     <FiLoader className="animate-spin" />
-                    Predicting...
+                    Predicting…
                   </>
                 ) : (
                   <>
@@ -268,7 +269,7 @@ function Predict() {
             {loading && (
               <div className="flex items-center justify-center gap-2 py-16 text-sm text-text-muted">
                 <FiLoader className="animate-spin" />
-                Predicting...
+                Predicting…
               </div>
             )}
 
@@ -334,7 +335,9 @@ function Predict() {
                     )}
                   </div>
                   <div className="flex items-center justify-between py-3">
-                    <span className="text-xs text-text-muted">Threshold</span>
+                    <span className="text-xs text-text-muted">
+                      Decision threshold
+                    </span>
                     <span className="text-xs font-medium tabular-nums text-text-secondary">
                       {(result.threshold * 100).toFixed(0)}%
                     </span>

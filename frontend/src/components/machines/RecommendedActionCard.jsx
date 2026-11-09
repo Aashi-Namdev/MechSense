@@ -125,9 +125,9 @@ function RecommendedActionCard({ machine, delay = 0.19 }) {
       <div className="mt-4 flex items-start gap-2 rounded-md border border-status-warning/25 bg-status-warning/10 px-3 py-2.5">
         <FiAlertTriangle className="mt-0.5 shrink-0 text-xs text-status-warning" />
         <p className="text-[11px] leading-relaxed text-status-warning">
-          <span className="font-medium">Simulation only:</span> Any numerical
-          target comes from the dataset&apos;s simulated rule and must be
-          checked against real machine operating limits before implementation.
+          <span className="font-medium">Simulation only:</span> These targets
+          come from the dataset&apos;s simulated rules. Check them against real
+          machine limits before making changes.
         </p>
       </div>
     </Card>

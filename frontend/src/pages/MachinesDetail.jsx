@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { FiArrowLeft } from "react-icons/fi";
-import { MOCK_MACHINES } from "../data/machines.js";
+import { FiAlertCircle, FiArrowLeft, FiLoader } from "react-icons/fi";
+import { getMachine } from "../services/api.js";
+import { toMachineViewModel } from "../data/machines.js";
 import PredictionCard from "../components/machines/PredictionCard.jsx";
 import LikelyCauseCard from "../components/machines/LikelyCauseCard.jsx";
 import RecommendedActionCard from "../components/machines/RecommendedActionCard.jsx";
@@ -9,28 +11,107 @@ import OutcomeCard from "../components/machines/OutcomeCard.jsx";
 import SensorReadings from "../components/machines/SensorReadings.jsx";
 import SensorComparison from "../components/machines/SensorComparison.jsx";
 
+function BackLink() {
+  return (
+    <Link
+      to="/machines"
+      className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-text-main"
+    >
+      <FiArrowLeft className="text-base" />
+      Back to Machines
+    </Link>
+  );
+}
+
 function MachinesDetail() {
   const { id } = useParams();
-  const machine = MOCK_MACHINES.find((item) => item.id === Number(id));
+  const udi = Number(id);
 
-  // if machine not found
+  const [machine, setMachine] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    async function loadMachine() {
+      if (!Number.isInteger(udi) || udi < 1) {
+        setMachine(null);
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const record = await getMachine(udi, controller.signal);
+        if (active) setMachine(toMachineViewModel(record));
+      } catch (requestError) {
+        if (!active || requestError.name === "AbortError") return;
+        setMachine(null);
+
+        // A 404 uses the dedicated "Machine not found" panel below.
+        if (requestError.status === 404) {
+          setError(null);
+        } else {
+          setError(requestError.message || "Please try again.");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    loadMachine();
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [udi]);
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <BackLink />
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 rounded-xl border border-border-subtle bg-bg-card px-4 py-16 text-center">
+          <FiLoader className="animate-spin text-xl text-primary" />
+          <p className="text-sm font-medium text-text-secondary">
+            Loading machine record…
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <BackLink />
+        <div className="mt-8 flex flex-col items-center justify-center gap-2 rounded-xl border border-border-subtle bg-bg-card px-4 py-16 text-center">
+          <FiAlertCircle className="text-2xl text-status-danger" />
+          <p className="text-sm font-medium text-text-main">
+            Couldn&apos;t load this machine
+          </p>
+          <p className="max-w-md text-xs text-text-muted">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!machine) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <Link
-          to="/machines"
-          className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-text-main"
-        >
-          <FiArrowLeft className="text-base" />
-          Back to Machines
-        </Link>
+        <BackLink />
 
         <div className="mt-8 flex flex-col items-center justify-center gap-2 rounded-xl border border-border-subtle bg-bg-card px-4 py-16 text-center">
           <p className="text-sm font-medium text-text-main">
             Machine not found
           </p>
           <p className="text-xs text-text-muted">
-            No machine record matches id &quot;{id}&quot;.
+            We couldn&apos;t find a machine record with ID &quot;{id}&quot;.
           </p>
         </div>
       </div>
@@ -58,6 +139,9 @@ function MachinesDetail() {
           </h1>
           <span className="inline-flex rounded-md bg-bg-card-elevated px-2 py-0.5 text-xs font-medium text-text-secondary">
             Type {machine.type}
+          </span>
+          <span className="inline-flex rounded-md bg-bg-card-elevated px-2 py-0.5 text-xs font-medium text-text-secondary">
+            Record ID {machine.id}
           </span>
         </div>
       </motion.header>

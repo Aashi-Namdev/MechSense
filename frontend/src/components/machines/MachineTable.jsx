@@ -42,10 +42,10 @@ function MachineTable({ machines, sortDir, onToggleSort }) {
       <div className="flex flex-col items-center justify-center gap-2 px-4 py-16 text-center">
         <FiSearch className="text-2xl text-text-muted" />
         <p className="text-sm font-medium text-text-secondary">
-          No machines found
+          No matching machines
         </p>
         <p className="text-xs text-text-muted">
-          Try changing the filters or search term.
+          Try adjusting your search or filters.
         </p>
       </div>
     );

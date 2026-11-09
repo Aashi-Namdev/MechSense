@@ -2,12 +2,12 @@ import { motion } from "motion/react";
 import { FiDatabase } from "react-icons/fi";
 import { BAND_COLORS } from "./riskColors.js";
 
-function MachineSummary({ machines }) {
-  const total = machines.length;
-
-  const highRisk = machines.filter((m) => m.riskBand === "High").length;
-  const mediumRisk = machines.filter((m) => m.riskBand === "Medium").length;
-  const lowRisk = machines.filter((m) => m.riskBand === "Low").length;
+function MachineSummary({ summary }) {
+  // Counts come from the dataset-wide API summary, not just the current page.
+  const total = summary?.total ?? 0;
+  const highRisk = summary?.high_risk ?? 0;
+  const mediumRisk = summary?.medium_risk ?? 0;
+  const lowRisk = summary?.low_risk ?? 0;
 
   const bandCounts = [
     { band: "High", count: highRisk, label: "high risk" },
