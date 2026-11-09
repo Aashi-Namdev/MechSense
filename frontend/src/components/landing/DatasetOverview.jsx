@@ -1,15 +1,53 @@
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import SectionHeading from "./SectionHeading.jsx";
-import { kpiCards } from "../../data/dashboard.js";
 
-const STATS = [
-  { value: kpiCards.totalRecords.toLocaleString(), label: "Machine Records" },
-  { value: "3", label: "Product Quality Types" },
-  { value: "5", label: "Sensor Inputs" },
-  { value: `${kpiCards.overallFailureRatePct}%`, label: "Failure Rate" },
-];
+import { getDashboard } from "../../services/api.js";
 
 function DatasetOverview() {
+  const [summary, setSummary] = useState(null);
+  const [unavailable, setUnavailable] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    getDashboard(controller.signal)
+      .then((response) => {
+        if (active) {
+          setSummary(response?.summary ?? null);
+          setUnavailable(!response?.summary);
+        }
+      })
+      .catch((error) => {
+        if (active && error.name !== "AbortError") {
+          setSummary(null);
+          setUnavailable(true);
+        }
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, []);
+
+  const total = summary?.total;
+  const actualFailures = summary?.actual_failures;
+  const failureRate =
+    typeof total === "number" && total > 0 && typeof actualFailures === "number"
+      ? `${((actualFailures / total) * 100).toFixed(2)}%`
+      : "—";
+  const stats = [
+    {
+      value: typeof total === "number" ? total.toLocaleString() : "—",
+      label: "Machine Records",
+    },
+    { value: "3", label: "Product Quality Types" },
+    { value: "5", label: "Sensor Inputs" },
+    { value: failureRate, label: "Failure Rate" },
+  ];
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <SectionHeading
@@ -19,7 +57,7 @@ function DatasetOverview() {
       />
 
       <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {STATS.map((stat, index) => (
+        {stats.map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 16 }}
@@ -35,6 +73,11 @@ function DatasetOverview() {
           </motion.div>
         ))}
       </div>
+      {unavailable && (
+        <p className="mt-3 text-xs text-text-muted">
+          Live dataset statistics are temporarily unavailable.
+        </p>
+      )}
 
       <motion.p
         initial={{ opacity: 0, y: 12 }}
@@ -45,9 +88,9 @@ function DatasetOverview() {
       >
         In addition to the five raw sensor readings, MechSense uses the
         temperature difference between process and air temperature as an
-        engineered feature. Because only 3.39% of the records are failures, the
-        dataset is imbalanced — predicting the majority class is easy, catching
-        an actual failure is the real challenge.
+        engineered feature. Because failures are uncommon, the dataset is
+        imbalanced — predicting the majority class is easy, catching an actual
+        failure is the real challenge.
       </motion.p>
     </section>
   );

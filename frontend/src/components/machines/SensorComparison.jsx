@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import Card from "../dashboard/Card.jsx";
-import { sensorAveragesByOutcome } from "../../data/dashboard.js";
+import { getDashboard } from "../../services/api.js";
 
 const SENSORS = [
   { key: "airTemp", label: "Air Temperature", unit: "K", decimals: 1 },
@@ -16,7 +17,61 @@ const SENSORS = [
 ];
 
 function SensorComparison({ machine }) {
-  const { normal, failed } = sensorAveragesByOutcome;
+  const [averages, setAverages] = useState(null);
+  const [unavailable, setUnavailable] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    getDashboard(controller.signal)
+      .then((response) => {
+        if (active) {
+          const responseAverages = response?.sensor_averages_by_outcome;
+          const hasAverages =
+            responseAverages?.normal && responseAverages?.failed;
+          setAverages(
+            hasAverages
+              ? {
+                  normal: {
+                    airTemp: hasAverages.normal.air_temperature,
+                    processTemp: hasAverages.normal.process_temperature,
+                    rpm: hasAverages.normal.rotational_speed,
+                    torque: hasAverages.normal.torque,
+                    toolWear: hasAverages.normal.tool_wear,
+                    temperatureDifference:
+                      hasAverages.normal.temperature_difference,
+                  },
+                  failed: {
+                    airTemp: hasAverages.failed.air_temperature,
+                    processTemp: hasAverages.failed.process_temperature,
+                    rpm: hasAverages.failed.rotational_speed,
+                    torque: hasAverages.failed.torque,
+                    toolWear: hasAverages.failed.tool_wear,
+                    temperatureDifference:
+                      hasAverages.failed.temperature_difference,
+                  },
+                }
+              : null,
+          );
+          setUnavailable(!hasAverages);
+        }
+      })
+      .catch((error) => {
+        if (active && error.name !== "AbortError") {
+          setAverages(null);
+          setUnavailable(true);
+        }
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, []);
+
+  const normal = averages?.normal;
+  const failed = averages?.failed;
 
   return (
     <Card title="Sensor vs Historical Average">
@@ -24,6 +79,11 @@ function SensorComparison({ machine }) {
         Compare this record with historical averages for normal and failed
         records.
       </p>
+      {unavailable && (
+        <p className="mb-4 rounded-lg bg-bg-card-elevated px-3.5 py-3 text-xs text-text-muted">
+          Historical averages are temporarily unavailable.
+        </p>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-sm">
@@ -56,11 +116,15 @@ function SensorComparison({ machine }) {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                  {normal[key].toFixed(decimals)}{" "}
+                  {typeof normal?.[key] === "number"
+                    ? normal[key].toFixed(decimals)
+                    : "—"}{" "}
                   <span className="text-xs text-text-muted">{unit}</span>
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums text-text-secondary">
-                  {failed[key].toFixed(decimals)}{" "}
+                  {typeof failed?.[key] === "number"
+                    ? failed[key].toFixed(decimals)
+                    : "—"}{" "}
                   <span className="text-xs text-text-muted">{unit}</span>
                 </td>
               </tr>

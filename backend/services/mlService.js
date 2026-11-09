@@ -11,10 +11,14 @@ async function requestMlService(path, options = {}) {
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
+    const timedOut =
+      error?.name === "TimeoutError" || error?.name === "AbortError";
     const mlError = new Error(
-      "ML service is unavailable. Make sure the Python service is running."
+      timedOut
+        ? "ML service request timed out."
+        : "ML service is unavailable. Make sure the Python service is running."
     );
-    mlError.code = "ML_UNAVAILABLE";
+    mlError.code = timedOut ? "ML_TIMEOUT" : "ML_UNAVAILABLE";
     throw mlError;
   }
 
@@ -31,6 +35,20 @@ async function requestMlService(path, options = {}) {
   return data;
 }
 
+// Build a query string while dropping empty filter values.
+function buildQueryString(params = {}) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, String(value));
+    }
+  });
+
+  const query = searchParams.toString();
+  return query ? `?${query}` : "";
+}
+
 function getMlHealth() {
   return requestMlService("/health");
 }
@@ -43,4 +61,22 @@ function predictWithMl(sensorReading) {
   });
 }
 
-module.exports = { getMlHealth, predictWithMl };
+function getDashboard() {
+  return requestMlService("/dashboard");
+}
+
+function getMachines(params = {}) {
+  return requestMlService(`/machines${buildQueryString(params)}`);
+}
+
+function getMachineByUdi(udi) {
+  return requestMlService(`/machines/${encodeURIComponent(udi)}`);
+}
+
+module.exports = {
+  getDashboard,
+  getMachineByUdi,
+  getMachines,
+  getMlHealth,
+  predictWithMl,
+};
