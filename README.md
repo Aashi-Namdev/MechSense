@@ -2,6 +2,12 @@
 
 MechSense is a college project that estimates machine failure risk from industrial sensor readings. It has a React dashboard, an Express API, and a Python machine-learning service.
 
+## Live Demo
+
+[Open MechSense](https://mechsense-predict.vercel.app)
+
+The frontend is deployed on Vercel. The backend and ML service are deployed on Render.
+
 ## 1. About the Project
 
 Predictive maintenance means using machine data to find problems before a breakdown happens. Instead of waiting for a machine to fail, maintenance can be planned earlier.
@@ -13,7 +19,7 @@ MechSense takes six inputs: machine type, air temperature, process temperature, 
 
 The app also shows a simple rule-based maintenance recommendation.
 
-This is a local project, not a production system. It shows the full flow from a React form to a Python ML model.
+It shows the full flow from a React form to a Python ML model. This is a college project, not a production system.
 
 ## 2. Features
 
@@ -322,7 +328,7 @@ Invalid input returns HTTP `400` with an `error` message and a `details` list.
 - Dashboard and Machines pages run the model on records that were partly used for training (see the note in section 5).
 - Model Performance metrics are fixed evaluation results; landing statistics and historical sensor averages are calculated from the cached dashboard data.
 - Maintenance recommendations use the simulated rules of the AI4I dataset, not real industrial safety limits.
-- It runs locally only. There is no login and no deployment setup.
+- There is no login.
 - There are no automated tests.
 
 ## 11. Future Improvements
@@ -331,7 +337,6 @@ These are ideas, not current features:
 
 - Save prediction history in MongoDB.
 - Add login and user roles.
-- Add Docker and deployment.
 - Add automated tests for the API and ML service.
 - Include the training notebook so training can be repeated.
 - Show feature importance or SHAP explanations.
